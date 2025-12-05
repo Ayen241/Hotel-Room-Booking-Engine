@@ -1,0 +1,301 @@
+<div class="booking-history-page">
+  <!-- Toast Notifications -->
+  <app-toast></app-toast>
+
+  <!-- Page Header -->
+  <div class="page-header bg-primary text-white py-5 mb-4">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="display-4 mb-2">
+            <i class="bi bi-clock-history me-3"></i>
+            Booking History
+          </h1>
+          <p class="lead mb-0">View and manage your bookings</p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+          <a routerLink="/rooms" class="btn btn-light me-2">
+            <i class="bi bi-arrow-left me-2"></i>
+            Back to Rooms
+          </a>
+          <button 
+            class="btn btn-outline-light"
+            (click)="refreshBookings()"
+            [disabled]="loading()"
+          >
+            <i class="bi bi-arrow-clockwise me-2"></i>
+            Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Statistics Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card bg-primary text-white">
+          <div class="stat-icon">
+            <i class="bi bi-list-check"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">{{ getTotalBookings() }}</h3>
+            <p class="stat-label mb-0">Total Bookings</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card bg-success text-white">
+          <div class="stat-icon">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">{{ getConfirmedBookings() }}</h3>
+            <p class="stat-label mb-0">Confirmed</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card bg-danger text-white">
+          <div class="stat-icon">
+            <i class="bi bi-x-circle-fill"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">{{ getCancelledBookings() }}</h3>
+            <p class="stat-label mb-0">Cancelled</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-card bg-info text-white">
+          <div class="stat-icon">
+            <i class="bi bi-currency-dollar"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">${{ getTotalSpent() }}</h3>
+            <p class="stat-label mb-0">Total Spent</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filters-section card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+          <!-- Search Input -->
+          <div class="col-md-5">
+            <label for="searchInput" class="form-label fw-semibold">
+              <i class="bi bi-search me-2"></i>
+              Search Bookings
+            </label>
+            <div class="input-group">
+              <input 
+                type="text"
+                id="searchInput"
+                class="form-control"
+                placeholder="Search by guest name, room, or ID..."
+                [value]="searchQuery()"
+                (input)="onSearchChange($any($event.target).value)"
+              />
+              <button 
+                class="btn btn-outline-secondary"
+                type="button"
+                (click)="clearSearch()"
+                [disabled]="!searchQuery()"
+              >
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Status Filter -->
+          <div class="col-md-3">
+            <label for="statusSelect" class="form-label fw-semibold">
+              <i class="bi bi-filter me-2"></i>
+              Status
+            </label>
+            <select 
+              id="statusSelect"
+              class="form-select"
+              [value]="selectedStatus()"
+              (change)="onStatusChange($any($event.target).value)"
+            >
+              <option value="all">All Statuses</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="pending">Pending</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+
+          <!-- Sort By -->
+          <div class="col-md-2">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-sort-down me-2"></i>
+              Sort By
+            </label>
+            <div class="btn-group w-100" role="group">
+              <button 
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                [class.active]="sortField() === 'bookingDate'"
+                (click)="onSortChange('bookingDate')"
+                title="Sort by booking date"
+              >
+                <i [ngClass]="getSortIcon('bookingDate')"></i>
+                Date
+              </button>
+              <button 
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                [class.active]="sortField() === 'totalPrice'"
+                (click)="onSortChange('totalPrice')"
+                title="Sort by price"
+              >
+                <i [ngClass]="getSortIcon('totalPrice')"></i>
+                Price
+              </button>
+            </div>
+          </div>
+
+          <!-- Clear Filters Button -->
+          <div class="col-md-2">
+            <button 
+              class="btn btn-outline-danger w-100"
+              (click)="clearAllFilters()"
+              [disabled]="!hasActiveFilters()"
+            >
+              <i class="bi bi-x-circle me-2"></i>
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <app-loading-spinner 
+      *ngIf="loading()"
+      message="Loading your bookings..."
+      size="large"
+    ></app-loading-spinner>
+
+    <!-- Bookings List -->
+    <div class="bookings-list" *ngIf="!loading()">
+      <!-- Empty State -->
+      <div 
+        class="empty-state text-center py-5"
+        *ngIf="filteredBookings().length === 0"
+      >
+        <i class="bi bi-inbox display-1 text-muted mb-3"></i>
+        <h3 class="text-muted">{{ getEmptyMessage() }}</h3>
+        <a 
+          routerLink="/rooms"
+          class="btn btn-primary mt-3"
+          *ngIf="bookings().length === 0"
+        >
+          <i class="bi bi-search me-2"></i>
+          Browse Rooms
+        </a>
+        <button 
+          class="btn btn-primary mt-3"
+          (click)="clearAllFilters()"
+          *ngIf="hasActiveFilters() && bookings().length > 0"
+        >
+          <i class="bi bi-arrow-clockwise me-2"></i>
+          Clear Filters
+        </button>
+      </div>
+
+      <!-- Booking Cards -->
+      <div class="row g-4" *ngIf="filteredBookings().length > 0">
+        <div 
+          class="col-12"
+          *ngFor="let booking of filteredBookings(); trackBy: trackByBookingId"
+        >
+          <div class="booking-card card shadow-sm">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <!-- Booking Info -->
+                <div class="col-lg-3">
+                  <h5 class="mb-1">Room {{ booking.roomName }}</h5>
+                  <span class="badge bg-secondary mb-2">{{ booking.roomType }}</span>
+                  <p class="text-muted small mb-0">
+                    <i class="bi bi-person-fill me-1"></i>
+                    {{ booking.guestName }}
+                  </p>
+                  <p class="text-muted small mb-0">
+                    <i class="bi bi-hash me-1"></i>
+                    {{ booking.id }}
+                  </p>
+                </div>
+
+                <!-- Dates -->
+                <div class="col-lg-3 mt-3 mt-lg-0">
+                  <div class="mb-2">
+                    <small class="text-muted d-block">Check-in</small>
+                    <strong>{{ formatDate(booking.checkInDate) }}</strong>
+                  </div>
+                  <div>
+                    <small class="text-muted d-block">Check-out</small>
+                    <strong>{{ formatDate(booking.checkOutDate) }}</strong>
+                  </div>
+                </div>
+
+                <!-- Booking Details -->
+                <div class="col-lg-2 mt-3 mt-lg-0 text-center">
+                  <div class="mb-2">
+                    <small class="text-muted d-block">Nights</small>
+                    <strong class="fs-5">{{ booking.numberOfNights }}</strong>
+                  </div>
+                  <small class="text-muted">Booked: {{ formatDate(booking.bookingDate) }}</small>
+                </div>
+
+                <!-- Price & Status -->
+                <div class="col-lg-2 mt-3 mt-lg-0 text-center">
+                  <div class="price-tag mb-2">
+                    <span class="price-label">Total</span>
+                    <span class="price-value">${{ booking.totalPrice }}</span>
+                  </div>
+                  <span 
+                    class="badge"
+                    [ngClass]="getStatusBadgeClass(booking.status)"
+                  >
+                    {{ booking.status }}
+                  </span>
+                </div>
+
+                <!-- Actions -->
+                <div class="col-lg-2 mt-3 mt-lg-0 text-center">
+                  <button 
+                    class="btn btn-danger btn-sm w-100"
+                    (click)="cancelBooking(booking.id)"
+                    *ngIf="booking.status !== 'cancelled'"
+                  >
+                    <i class="bi bi-x-circle me-1"></i>
+                    Cancel
+                  </button>
+                  <span 
+                    class="text-muted small"
+                    *ngIf="booking.status === 'cancelled'"
+                  >
+                    Cancelled
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Count -->
+      <div class="results-info text-center mt-4" *ngIf="filteredBookings().length > 0">
+        <p class="text-muted mb-0">
+          Showing <strong>{{ filteredBookings().length }}</strong> 
+          {{ filteredBookings().length === 1 ? 'booking' : 'bookings' }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

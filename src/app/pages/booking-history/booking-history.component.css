@@ -1,0 +1,257 @@
+.booking-history-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding-bottom: 3rem;
+}
+
+.page-header {
+  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.page-header h1 {
+  font-weight: 700;
+  margin: 0;
+}
+
+.page-header .lead {
+  opacity: 0.9;
+}
+
+/* Statistics Cards */
+.stat-card {
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  opacity: 0.8;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-top: 0.25rem;
+}
+
+/* Filters Section */
+.filters-section {
+  border: none;
+}
+
+.filters-section .card-body {
+  padding: 1.5rem;
+}
+
+.form-label {
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.form-control,
+.form-select {
+  border: 1px solid #ced4da;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.375rem;
+}
+
+/* Booking Cards */
+.booking-card {
+  border: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.booking-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.booking-card h5 {
+  color: #212529;
+  font-weight: 600;
+}
+
+.booking-card .badge {
+  font-size: 0.75rem;
+  padding: 0.4em 0.7em;
+}
+
+.price-tag {
+  background-color: #f8f9fa;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  display: inline-block;
+}
+
+.price-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.price-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0d6efd;
+  line-height: 1;
+  margin-top: 0.25rem;
+}
+
+/* Empty State */
+.empty-state {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 3rem 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.empty-state i {
+  opacity: 0.3;
+}
+
+/* Results Info */
+.results-info {
+  padding: 1rem;
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Buttons */
+.btn {
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.875rem;
+}
+
+.btn-group .btn {
+  font-size: 0.8rem;
+}
+
+.btn-group .btn.active {
+  background-color: #0d6efd;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .booking-card .row > div {
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .booking-card .row > div:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 2rem 0 !important;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+
+  .filters-section .card-body {
+    padding: 1rem;
+  }
+
+  .booking-card .card-body {
+    padding: 1rem;
+  }
+
+  .price-value {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .stat-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .page-header .display-4 {
+    font-size: 1.75rem;
+  }
+
+  .page-header .lead {
+    font-size: 1rem;
+  }
+
+  .page-header .btn {
+    font-size: 0.875rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .page-header .btn-light {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bookings-list .booking-card {
+  animation: fadeIn 0.3s ease-out;
+}

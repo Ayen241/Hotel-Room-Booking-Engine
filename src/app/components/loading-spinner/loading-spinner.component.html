@@ -1,0 +1,14 @@
+<div [ngClass]="getContainerClass()" role="status" aria-live="polite">
+  <div class="spinner-content">
+    <div 
+      class="spinner-border" 
+      [ngClass]="[getSpinnerSizeClass(), getSpinnerColorClass()]"
+      role="status"
+    >
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="spinner-message mt-3 mb-0" *ngIf="message">
+      {{ message }}
+    </p>
+  </div>
+</div>

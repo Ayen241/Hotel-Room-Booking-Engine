@@ -1,0 +1,156 @@
+<div 
+  class="modal fade" 
+  [class.show]="isVisible" 
+  [style.display]="isVisible ? 'block' : 'none'"
+  tabindex="-1"
+  (click)="onBackdropClick($event)"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-calendar-check me-2"></i>
+          Book Room {{ room.name }}
+        </h5>
+        <button 
+          type="button" 
+          class="btn-close" 
+          (click)="close()"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <!-- Room Summary -->
+        <div class="room-summary mb-4 p-3 bg-light rounded">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-1">{{ room.type }} Room</h6>
+              <small class="text-muted">Room {{ room.name }}</small>
+            </div>
+            <div class="text-end">
+              <div class="fw-bold text-primary">${{ room.price }}</div>
+              <small class="text-muted">per night</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Form -->
+        <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+          <!-- Guest Name -->
+          <div class="mb-3">
+            <label for="guestName" class="form-label">
+              Guest Name <span class="text-danger">*</span>
+            </label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="guestName"
+              formControlName="guestName"
+              placeholder="Enter your full name"
+              [class.is-invalid]="hasError('guestName', 'required') || hasError('guestName', 'minlength') || hasError('guestName', 'pattern')"
+            />
+            <div class="invalid-feedback" *ngIf="bookingForm.get('guestName')?.touched">
+              {{ getErrorMessage('guestName') }}
+            </div>
+          </div>
+
+          <!-- Check-in Date -->
+          <div class="mb-3">
+            <label for="checkInDate" class="form-label">
+              Check-in Date <span class="text-danger">*</span>
+            </label>
+            <input 
+              type="date" 
+              class="form-control" 
+              id="checkInDate"
+              formControlName="checkInDate"
+              [min]="minDate()"
+              [class.is-invalid]="hasError('checkInDate', 'required') || hasFormError('pastDate')"
+            />
+            <div class="invalid-feedback" *ngIf="bookingForm.get('checkInDate')?.touched">
+              {{ getErrorMessage('checkInDate') }}
+            </div>
+          </div>
+
+          <!-- Check-out Date -->
+          <div class="mb-3">
+            <label for="checkOutDate" class="form-label">
+              Check-out Date <span class="text-danger">*</span>
+            </label>
+            <input 
+              type="date" 
+              class="form-control" 
+              id="checkOutDate"
+              formControlName="checkOutDate"
+              [min]="minDate()"
+              [class.is-invalid]="hasError('checkOutDate', 'required') || hasFormError('dateRange')"
+            />
+            <div class="invalid-feedback" *ngIf="bookingForm.get('checkOutDate')?.touched || hasFormError('dateRange')">
+              {{ getErrorMessage('checkOutDate') }}
+            </div>
+          </div>
+
+          <!-- Form-level Error Message -->
+          <div class="alert alert-danger py-2" *ngIf="getFormErrorMessage()">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ getFormErrorMessage() }}
+          </div>
+
+          <!-- Booking Summary -->
+          <div class="booking-summary p-3 bg-light rounded" *ngIf="numberOfNights() > 0">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Number of Nights:</span>
+              <strong>{{ numberOfNights() }}</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Price per Night:</span>
+              <strong>${{ room.price }}</strong>
+            </div>
+            <hr class="my-2">
+            <div class="d-flex justify-content-between">
+              <span class="fw-bold">Total Price:</span>
+              <strong class="text-primary fs-5">${{ totalPrice() }}</strong>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="close()"
+          [disabled]="isSubmitting()"
+        >
+          Cancel
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-primary"
+          (click)="onSubmit()"
+          [disabled]="!bookingForm.valid || isSubmitting()"
+        >
+          <span *ngIf="!isSubmitting()">
+            <i class="bi bi-check-circle me-2"></i>
+            Confirm Booking
+          </span>
+          <span *ngIf="isSubmitting()">
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Processing...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div 
+  class="modal-backdrop fade" 
+  [class.show]="isVisible"
+  *ngIf="isVisible"
+></div>

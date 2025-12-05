@@ -1,0 +1,216 @@
+<div class="room-list-page">
+  <!-- Toast Notifications -->
+  <app-toast></app-toast>
+
+  <!-- Page Header -->
+  <div class="page-header bg-primary text-white py-5 mb-4">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="display-4 mb-2">
+            <i class="bi bi-building me-3"></i>
+            Available Rooms
+          </h1>
+          <p class="lead mb-0">Find and book your perfect room</p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+          <button 
+            class="btn btn-light"
+            (click)="refreshRooms()"
+            [disabled]="loading()"
+          >
+            <i class="bi bi-arrow-clockwise me-2"></i>
+            Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Statistics Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="stat-card bg-primary text-white">
+          <div class="stat-icon">
+            <i class="bi bi-door-open-fill"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">{{ totalRooms() }}</h3>
+            <p class="stat-label mb-0">Total Rooms</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card bg-success text-white">
+          <div class="stat-icon">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">{{ availableRooms() }}</h3>
+            <p class="stat-label mb-0">Available</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card bg-danger text-white">
+          <div class="stat-icon">
+            <i class="bi bi-x-circle-fill"></i>
+          </div>
+          <div class="stat-content">
+            <h3 class="stat-number">{{ bookedRooms() }}</h3>
+            <p class="stat-label mb-0">Booked</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filters-section card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+          <!-- Search Input -->
+          <div class="col-md-6">
+            <label for="searchInput" class="form-label fw-semibold">
+              <i class="bi bi-search me-2"></i>
+              Search Rooms
+            </label>
+            <div class="input-group">
+              <input 
+                type="text"
+                id="searchInput"
+                class="form-control"
+                placeholder="Search by room name, type, or description..."
+                [value]="searchQuery()"
+                (input)="onSearchChange($any($event.target).value)"
+              />
+              <button 
+                class="btn btn-outline-secondary"
+                type="button"
+                (click)="clearSearch()"
+                [disabled]="!searchQuery()"
+              >
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Room Type Filter -->
+          <div class="col-md-4">
+            <label for="roomTypeSelect" class="form-label fw-semibold">
+              <i class="bi bi-filter me-2"></i>
+              Room Type
+            </label>
+            <select 
+              id="roomTypeSelect"
+              class="form-select"
+              [value]="selectedRoomType()"
+              (change)="onRoomTypeChange($any($event.target).value)"
+            >
+              <option *ngFor="let type of roomTypes()" [value]="type">
+                {{ type }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Clear Filters Button -->
+          <div class="col-md-2">
+            <button 
+              class="btn btn-outline-danger w-100"
+              (click)="clearAllFilters()"
+              [disabled]="!hasActiveFilters()"
+            >
+              <i class="bi bi-x-circle me-2"></i>
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Filters Display -->
+        <div class="mt-3" *ngIf="hasActiveFilters()">
+          <small class="text-muted">Active filters:</small>
+          <div class="d-flex flex-wrap gap-2 mt-2">
+            <span 
+              class="badge bg-primary"
+              *ngIf="selectedRoomType() !== 'All'"
+            >
+              Type: {{ selectedRoomType() }}
+              <i 
+                class="bi bi-x-lg ms-1 cursor-pointer"
+                (click)="onRoomTypeChange('All')"
+              ></i>
+            </span>
+            <span 
+              class="badge bg-primary"
+              *ngIf="searchQuery()"
+            >
+              Search: "{{ searchQuery() }}"
+              <i 
+                class="bi bi-x-lg ms-1 cursor-pointer"
+                (click)="clearSearch()"
+              ></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <app-loading-spinner 
+      *ngIf="loading()"
+      message="Loading available rooms..."
+      size="large"
+    ></app-loading-spinner>
+
+    <!-- Room Grid -->
+    <div class="room-grid" *ngIf="!loading()">
+      <!-- Empty State -->
+      <div 
+        class="empty-state text-center py-5"
+        *ngIf="filteredRooms().length === 0"
+      >
+        <i class="bi bi-inbox display-1 text-muted mb-3"></i>
+        <h3 class="text-muted">{{ getEmptyMessage() }}</h3>
+        <button 
+          class="btn btn-primary mt-3"
+          (click)="clearAllFilters()"
+          *ngIf="hasActiveFilters()"
+        >
+          <i class="bi bi-arrow-clockwise me-2"></i>
+          Clear Filters
+        </button>
+      </div>
+
+      <!-- Room Cards -->
+      <div class="row g-4" *ngIf="filteredRooms().length > 0">
+        <div 
+          class="col-12 col-sm-6 col-lg-4 col-xl-3"
+          *ngFor="let room of filteredRooms(); trackBy: trackByRoomId"
+        >
+          <app-room-card
+            [room]="room"
+            (bookRoom)="onBookRoom($event)"
+          ></app-room-card>
+        </div>
+      </div>
+
+      <!-- Results Count -->
+      <div class="results-info text-center mt-4" *ngIf="filteredRooms().length > 0">
+        <p class="text-muted mb-0">
+          Showing <strong>{{ filteredRooms().length }}</strong> 
+          {{ filteredRooms().length === 1 ? 'room' : 'rooms' }}
+          <span *ngIf="hasActiveFilters()">matching your filters</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Modal -->
+  <app-book-room-modal
+    *ngIf="selectedRoom()"
+    [room]="selectedRoom()!"
+    [isVisible]="isModalVisible()"
+    (bookingSubmit)="onBookingSubmit($event)"
+    (modalClose)="onModalClose()"
+  ></app-book-room-modal>
+</div>
