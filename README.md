@@ -1,187 +1,158 @@
 # 🏨 Hotel Room Booking Engine
 
-A modern, fully-functional hotel room booking application built with Angular 21, TypeScript, and Bootstrap 5. This application allows users to browse available hotel rooms, filter by room type, make bookings, and view their booking history.
+A modern hotel room booking application built with Angular 21, TypeScript, and Bootstrap 5. Browse rooms, make bookings, and view your reservation history - all with a responsive, user-friendly interface.
 
-## 🌟 Features
+![Angular](https://img.shields.io/badge/Angular-21.0.0-red)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.8-purple)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-- **Room Browsing** - View all available hotel rooms with detailed information
-- **Advanced Filtering** - Filter rooms by type (Single, Double, Suite, Deluxe)
-- **Room Booking** - Interactive booking modal with form validation
-- **Booking History** - View all past and current bookings
-- **Toast Notifications** - Real-time feedback for user actions
-- **Responsive Design** - Optimized for desktop and mobile devices
-- **Data Persistence** - Bookings stored in localStorage
-- **Type Safety** - Strict TypeScript mode with no `any` types
-- **MockAPI Integration** - RESTful API integration with MockAPI.io
+## ✨ Features
 
-## 🛠️ Tech Stack
+- 🏨 Browse and view hotel rooms with detailed information
+- 🔍 Filter rooms by type (Single, Double, Suite, Deluxe)
+- 📝 Interactive booking form with validation
+- 📜 View booking history
+- 🔔 Real-time toast notifications
+- 📱 Fully responsive design (mobile, tablet, desktop)
+- 💾 Local data persistence
+- 🎨 Modern UI with Bootstrap 5
 
-- **Framework:** Angular 21.0.0
-- **Language:** TypeScript 5.9.2 (Strict Mode)
-- **UI Framework:** Bootstrap 5.3.8
-- **Icons:** Bootstrap Icons 1.13.1
-- **State Management:** RxJS 7.8.0
-- **Backend:** MockAPI.io
-- **Testing:** Vitest 4.0.8
+## 🚀 Quick Start
 
-## 📋 Prerequisites
+### Prerequisites
 
-Before you begin, ensure you have the following installed:
-- Node.js (v20.x or higher)
-- npm (v11.x or higher)
-- Angular CLI (`npm install -g @angular/cli`)
+Make sure you have these installed:
+- **Node.js** v20+ ([Download](https://nodejs.org/))
+- **npm** v11+ (comes with Node.js)
 
-## 🚀 Getting Started
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Ayen241/Hotel-Room-Booking-Engine.git
-   cd Hotel-Room-Booking-Engine
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Configure API endpoint** (Optional)
-   
-   The application uses MockAPI.io. The base URL is already configured in `src/app/shared/constants/api.constants.ts`
-
-### Development Server
-
-To start a local development server:
+### Installation & Running
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/Ayen241/Hotel-Room-Booking-Engine.git
+cd Hotel-Room-Booking-Engine
+
+# 2. Install dependencies
+npm install
+
+# 3. Start the development server
 npm start
 ```
 
-or
+**That's it!** 🎉 Open your browser and go to **http://localhost:4200/**
+
+The app will automatically reload when you make changes to files.
+
+### Alternative Commands
 
 ```bash
+# Run with Angular CLI
 ng serve
+
+# Build for production
+npm run build
+
+# Run tests
+npm test
+
+# Build in watch mode
+npm run watch
 ```
 
-Navigate to `http://localhost:4200/`. The application will automatically reload when you change any source files.
+## 💡 How to Use
+
+### 1️⃣ Browse Rooms
+- Open the app at `http://localhost:4200/`
+- View all available hotel rooms with prices and amenities
+
+### 2️⃣ Filter Rooms
+- Use the dropdown to filter by room type
+- Options: All, Single, Double, Suite, Deluxe
+
+### 3️⃣ Book a Room
+- Click **"Book Now"** on any room
+- Fill in the booking form:
+  - **Guest Name** (required)
+  - **Email** (valid email required)
+  - **Check-in Date** (today or future)
+  - **Check-out Date** (must be after check-in)
+- Click **"Confirm Booking"**
+- See success notification! ✅
+
+### 4️⃣ View Booking History
+- Click **"Booking History"** in the navigation
+- See all your bookings with details
+- Bookings are saved in browser storage
+
+## 🛠️ Tech Stack
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Angular | 21.0.0 | Frontend Framework |
+| TypeScript | 5.9.2 | Type-safe JavaScript |
+| Bootstrap | 5.3.8 | UI Components & Styling |
+| RxJS | 7.8.0 | Reactive Programming |
+| MockAPI.io | - | Backend API |
+| Vitest | 4.0.8 | Unit Testing |
+
+## ⚠️ Important Notes
+
+- **No real payments** - This is a booking interface demonstration only
+- **LocalStorage** - Bookings are saved in your browser (won't sync across devices)
+- **MockAPI** - Backend may reset data periodically
+- **No authentication** - No login required (simplified for demo)
+- **Single bookings** - Book one room at a time
+- **Internet required** - Needs connection for initial load and API calls
+
+## 🐛 Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| **Port 4200 in use** | Run `ng serve --port 4300` |
+| **Dependencies fail** | Run `npm cache clean --force` then `npm install` |
+| **API not responding** | Check internet connection, verify MockAPI is accessible |
+| **TypeScript errors** | Run `npm install` to ensure all dependencies are installed |
+| **App won't start** | Make sure Node.js v20+ is installed |
+| **Blank page** | Check browser console (F12) for errors |
 
 ## 📁 Project Structure
 
 ```
-src/
-├── app/
-│   ├── components/          # Reusable UI components
-│   │   ├── room-card/
-│   │   ├── book-room-modal/
-│   │   ├── toast/
-│   │   └── loading-spinner/
-│   ├── pages/               # Page-level components
-│   │   ├── room-list/
-│   │   └── booking-history/
-│   ├── services/            # Business logic & API services
-│   │   ├── room.service.ts
-│   │   ├── booking.service.ts
-│   │   └── toast.service.ts
-│   ├── models/              # TypeScript interfaces & enums
-│   │   ├── room.model.ts
-│   │   ├── booking.model.ts
-│   │   └── room-type.enum.ts
-│   └── shared/              # Shared utilities & constants
-│       ├── constants/
-│       └── utils/
-├── mock-data/               # MockAPI data files
-└── styles.css               # Global styles
+src/app/
+├── components/        # Reusable UI components (room-card, modal, toast, spinner)
+├── pages/             # Page components (room-list, booking-history)
+├── services/          # API & business logic (room, booking, toast services)
+├── models/            # TypeScript interfaces & enums
+└── shared/            # Constants & utilities
 ```
 
-## 🔧 Available Scripts
+## 🔌 API Information
 
-| Command | Description |
-|---------|-------------|
-| `npm start` | Start development server on port 4200 |
-| `npm run build` | Build the project for production |
-| `npm test` | Run unit tests with Vitest |
-| `npm run watch` | Build in watch mode for development |
-
-## 🎨 Key Components
-
-### Room List Page
-- Displays all available hotel rooms
-- Provides filtering by room type
-- Shows room availability status
-- Handles room booking through modal
-
-### Book Room Modal
-- Reactive form with validation
-- Guest name and email inputs
-- Check-in and check-out date pickers
-- Real-time form validation feedback
-
-### Booking History Page
-- Displays all bookings from localStorage
-- Shows booking details (guest info, dates, room details)
-- Responsive card layout
-
-### Toast Notifications
-- Success and error messages
-- Auto-dismiss after 3 seconds
-- Positioned at top-right corner
-
-## 🔌 API Endpoints
+**Backend:** MockAPI.io (Already configured - no setup needed)
 
 **Base URL:** `https://6932963ae5a9e342d26fd8e9.mockapi.io/`
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/rooms` | Fetch all rooms |
-| GET | `/rooms/:id` | Fetch single room |
-| PUT | `/rooms/:id` | Update room availability |
-| POST | `/bookings` | Create new booking |
-| GET | `/bookings` | Fetch all bookings |
+The API is pre-configured and ready to use. All room data is already populated.
 
-## 🧪 Testing
-
-Run unit tests:
+## 🧪 Testing & Building
 
 ```bash
+# Run unit tests
 npm test
-```
 
-The project uses [Vitest](https://vitest.dev/) as the test runner.
-
-## 🏗️ Building for Production
-
-To build the project for production:
-
-```bash
+# Build for production
 npm run build
+
+# Build in watch mode
+npm run watch
 ```
 
-Build artifacts will be stored in the `dist/` directory, optimized for performance and speed.
-
-## 📱 Responsive Design
-
-The application is fully responsive and tested on:
-- Desktop (1920px and above)
-- Laptop (1024px - 1919px)
-- Tablet (768px - 1023px)
-- Mobile (320px - 767px)
-
-## 🔒 Type Safety
-
-This project uses TypeScript in strict mode with the following configurations:
-- No `any` types allowed
-- Strict null checks enabled
-- Strict function types enabled
-- Strict property initialization
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+Production build will be in the `dist/` directory.
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+MIT License - feel free to use this project for learning and development.
 
 ## 👤 Author
 
@@ -189,17 +160,14 @@ This project is licensed under the MIT License.
 - GitHub: [@Ayen241](https://github.com/Ayen241)
 - Repository: [Hotel-Room-Booking-Engine](https://github.com/Ayen241/Hotel-Room-Booking-Engine)
 
-## 📞 Support
+## 🤝 Contributing
 
-For support, please open an issue in the GitHub repository.
+Contributions, issues, and feature requests are welcome!
 
-## 🙏 Acknowledgments
-
-- Built with [Angular CLI](https://github.com/angular/angular-cli) version 21.0.2
-- UI components from [Bootstrap 5](https://getbootstrap.com/)
-- Icons from [Bootstrap Icons](https://icons.getbootstrap.com/)
-- Mock API powered by [MockAPI.io](https://mockapi.io/)
+Feel free to check the [issues page](https://github.com/Ayen241/Hotel-Room-Booking-Engine/issues).
 
 ---
 
-**Note:** This project was created as a demonstration of Angular best practices and modern web development techniques.
+**Built with ❤️ using Angular 21 • Bootstrap 5 • TypeScript**
+
+*This project demonstrates Angular best practices and modern web development techniques.*
